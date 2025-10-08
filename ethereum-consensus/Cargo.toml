@@ -67,8 +67,8 @@ unicode-normalization = { workspace = true, optional = true }
 bitvec = { workspace = true, optional = true }
 
 [dev-dependencies]
-alloy-eips = { version = "0.13.0", default-features = false}
-reth-ethereum-primitives = { git = "https://github.com/paradigmxyz/reth", tag = "v1.3.7", default-features = false }
+alloy-eips = { version = "1.0", default-features = false}
+reth-ethereum-primitives = { git = "https://github.com/paradigmxyz/reth", tag = "v1.8.2", default-features = false }
 
 
 [[bin]]
