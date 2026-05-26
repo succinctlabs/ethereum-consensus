@@ -1,17 +1,20 @@
 pub use multiaddr::Multiaddr;
-use multihash::{Code, Error, Multihash};
+use multihash::Multihash;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::{fmt, str::FromStr};
 use thiserror::Error;
 
 pub const MAX_INLINE_KEY_LENGTH: usize = 42;
+const IDENTITY_CODE: u64 = 0x00;
+const SHA2_256_CODE: u64 = 0x12;
+type PeerMultihash = Multihash<64>;
 
 // PeerId reimplemented from rust-libp2p
 // revisit this implementation later
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct PeerId {
-    multihash: Multihash,
+    multihash: PeerMultihash,
 }
 
 impl fmt::Display for PeerId {
@@ -29,15 +32,15 @@ impl PeerId {
         self.multihash.to_bytes()
     }
     /// Parses a `PeerId` from bytes.
-    pub fn from_bytes(data: &[u8]) -> Result<PeerId, Error> {
-        PeerId::from_multihash(Multihash::from_bytes(data)?)
-            .map_err(|mh| Error::UnsupportedCode(mh.code()))
+    pub fn from_bytes(data: &[u8]) -> Result<PeerId, PeerIdError> {
+        let multihash = PeerMultihash::from_bytes(data)?;
+        PeerId::from_multihash(multihash).map_err(|mh| PeerIdError::UnsupportedCode(mh.code()))
     }
     /// Tries to turn a `Multihash` into a `PeerId`.
-    pub fn from_multihash(multihash: Multihash) -> Result<PeerId, Multihash> {
-        match Code::try_from(multihash.code()) {
-            Ok(Code::Sha2_256) => Ok(PeerId { multihash }),
-            Ok(Code::Identity) if multihash.digest().len() <= MAX_INLINE_KEY_LENGTH => {
+    pub fn from_multihash(multihash: PeerMultihash) -> Result<PeerId, PeerMultihash> {
+        match multihash.code() {
+            SHA2_256_CODE => Ok(PeerId { multihash }),
+            IDENTITY_CODE if multihash.digest().len() <= MAX_INLINE_KEY_LENGTH => {
                 Ok(PeerId { multihash })
             }
             _ => Err(multihash),
@@ -100,11 +103,19 @@ impl<'de> Deserialize<'de> for PeerId {
 }
 
 #[derive(Debug, Error)]
+pub enum PeerIdError {
+    #[error("multihash decode error: {0}")]
+    Multihash(#[from] multihash::Error),
+    #[error("unsupported peer id multihash code: {0}")]
+    UnsupportedCode(u64),
+}
+
+#[derive(Debug, Error)]
 pub enum ParseError {
     #[error("base-58 decode error: {0}")]
     B58(#[from] bs58::decode::Error),
-    #[error("decoding multihash failed")]
-    MultiHash,
+    #[error("peer id decode error: {0}")]
+    PeerId(#[from] PeerIdError),
 }
 
 impl FromStr for PeerId {
@@ -113,7 +124,7 @@ impl FromStr for PeerId {
     #[inline]
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let bytes = bs58::decode(s).into_vec()?;
-        PeerId::from_bytes(&bytes).map_err(|_| ParseError::MultiHash)
+        Ok(PeerId::from_bytes(&bytes)?)
     }
 }
 

@@ -28,17 +28,17 @@ pub fn sized_header(data_byte_length: usize) -> Result<[u8; HEADER_SIZE], Error>
 // framing mode.
 pub fn payload_from_sized(stream: &[u8]) -> Result<&[u8], Error> {
     if stream.len() < HEADER_SIZE {
-        return Err(Error::ExpectedHeaderForSizedFraming)
+        return Err(Error::ExpectedHeaderForSizedFraming);
     }
 
     let (header, payload) = stream.split_at(HEADER_SIZE);
 
     if header[0] != SIZED_FRAMING_VERSION {
-        return Err(Error::UnsupportedSizedFramingVersion)
+        return Err(Error::UnsupportedSizedFramingVersion);
     }
     let size = u32::from_be_bytes(header[1..5].try_into().expect("correct size bytes")) as usize;
     if size >= stream.len() {
-        return Err(Error::InvalidPayloadSize)
+        return Err(Error::InvalidPayloadSize);
     }
 
     Ok(&payload[..size])

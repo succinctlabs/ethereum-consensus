@@ -28,7 +28,7 @@ pub type ValidatorKeys = (KeyPair, KeyPair);
 struct Key(U256);
 
 fn bytes_split<const M: usize, const N: usize>(input: &[u8]) -> Vec<&[u8]> {
-    debug_assert!(M % N == 0);
+    debug_assert!(M.is_multiple_of(N));
     debug_assert!(input.len() == M);
 
     input.chunks_exact(N).collect()

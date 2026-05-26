@@ -190,7 +190,7 @@ pub fn process_withdrawals<
                 provided: payload.withdrawals.to_vec(),
                 expected: expected_withdrawals,
             },
-        )))
+        )));
     }
 
     for withdrawal in payload.withdrawals.iter() {
@@ -296,7 +296,7 @@ pub fn process_execution_payload<
                 expected: state.latest_execution_payload_header.block_hash.clone(),
             }
             .into(),
-        ))
+        ));
     }
 
     let current_epoch = get_current_epoch(state, context);
@@ -308,7 +308,7 @@ pub fn process_execution_payload<
                 expected: randao_mix.clone(),
             }
             .into(),
-        ))
+        ));
     }
 
     let timestamp = compute_timestamp_at_slot(state, state.slot, context)?;
@@ -319,7 +319,7 @@ pub fn process_execution_payload<
                 expected: timestamp,
             }
             .into(),
-        ))
+        ));
     }
 
     if body.blob_kzg_commitments.len() > context.max_blobs_per_block {
@@ -329,7 +329,7 @@ pub fn process_execution_payload<
                 limit: context.max_blobs_per_block,
             }
             .into(),
-        ))
+        ));
     }
 
     let versioned_hashes =
@@ -517,7 +517,7 @@ pub fn process_attestation<
                 target: data.target.epoch,
                 current: current_epoch,
             },
-        )))
+        )));
     }
     let attestation_epoch = compute_epoch_at_slot(data.slot, context);
     if data.target.epoch != attestation_epoch {
@@ -527,7 +527,7 @@ pub fn process_attestation<
                 epoch: attestation_epoch,
                 target: data.target.epoch,
             },
-        )))
+        )));
     }
     let attestation_is_timely = data.slot + context.min_attestation_inclusion_delay <= state.slot;
     if !attestation_is_timely {
@@ -537,7 +537,7 @@ pub fn process_attestation<
                 state_slot: state.slot,
                 required_delay: context.min_attestation_inclusion_delay,
             },
-        )))
+        )));
     }
 
     if data.index != 0 {
@@ -567,7 +567,7 @@ pub fn process_attestation<
                 expected_length: participants_count,
                 length: attestation.aggregation_bits.len(),
             },
-        )))
+        )));
     }
 
     let inclusion_delay = state.slot - data.slot;
@@ -1033,21 +1033,21 @@ pub fn process_consolidation_request<
         is_valid_switch_to_compounding_request(state, consolidation_request, context)
     {
         switch_to_compounding_validator(state, source_index, context)?;
-        return Ok(())
+        return Ok(());
     }
 
     // Verify that source != target, so a consolidation cannot be used as an exit
     if consolidation_request.source_public_key == consolidation_request.target_public_key {
-        return Ok(())
+        return Ok(());
     }
     // If the pending consolidations queue is full, consolidation requests are ignored
     if state.pending_consolidations.len() == PENDING_CONSOLIDATIONS_LIMIT {
-        return Ok(())
+        return Ok(());
     }
     // If there is too little available consolidation churn limit, consolidation requests are
     // ignored
     if get_consolidation_churn_limit(state, context)? <= context.min_activation_balance {
-        return Ok(())
+        return Ok(());
     }
 
     // Verify pubkeys exists
@@ -1079,36 +1079,36 @@ pub fn process_consolidation_request<
         source_validator.withdrawal_credentials[12..] == consolidation_request.source_address[..];
 
     if !(has_correct_credential && is_correct_source_address) {
-        return Ok(())
+        return Ok(());
     }
 
     // Verify that target has compounding withdrawal credentials
     if !has_compounding_withdrawal_credential(target_validator) {
-        return Ok(())
+        return Ok(());
     }
 
     // Verify the source and the target are active
     let current_epoch = get_current_epoch(state, context);
     if !is_active_validator(source_validator, current_epoch) {
-        return Ok(())
+        return Ok(());
     }
     if !is_active_validator(target_validator, current_epoch) {
-        return Ok(())
+        return Ok(());
     }
     // Verify exits for source and target have not been initiated
     if source_validator.exit_epoch != FAR_FUTURE_EPOCH {
-        return Ok(())
+        return Ok(());
     }
     if target_validator.exit_epoch != FAR_FUTURE_EPOCH {
-        return Ok(())
+        return Ok(());
     }
     // Verify the source has been active long enough
     if current_epoch < source_validator.activation_epoch + context.shard_committee_period {
-        return Ok(())
+        return Ok(());
     }
     // Verify the source has no pending withdrawals in the queue
     if get_pending_balance_to_withdraw(state, source_index) > 0 {
-        return Ok(())
+        return Ok(());
     }
 
     let exit_epoch = compute_consolidation_epoch_and_update_churn(
@@ -1179,7 +1179,7 @@ fn is_valid_switch_to_compounding_request<
 
     // Verify request has been authorized
     if source_validator.withdrawal_credentials[12..] != consolidation_request.source_address[..] {
-        return None
+        return None;
     }
 
     // Verify source withdrawal credentials

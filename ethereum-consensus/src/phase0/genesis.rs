@@ -126,7 +126,7 @@ pub fn is_valid_genesis_state<
     context: &Context,
 ) -> bool {
     if state.genesis_time < context.min_genesis_time {
-        return false
+        return false;
     }
 
     get_active_validator_indices(state, GENESIS_EPOCH).len() >=

@@ -1,3 +1,6 @@
+#![allow(mismatched_lifetime_syntaxes)]
+#![allow(clippy::manual_is_multiple_of)]
+
 pub mod altair;
 pub mod bellatrix;
 pub mod builder;

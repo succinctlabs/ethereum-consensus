@@ -182,7 +182,7 @@ pub fn get_unslashed_participating_indices<
             requested: epoch,
             previous: previous_epoch,
             current: current_epoch,
-        })
+        });
     }
 
     let epoch_participation = if is_current {
@@ -240,7 +240,7 @@ pub fn get_attestation_participation_flag_indices<
                 source_checkpoint: data.source.clone(),
                 current: get_current_epoch(state, context),
             },
-        )))
+        )));
     }
     let is_matching_target = is_matching_source &&
         (data.target.root == *get_block_root(state, data.target.epoch, context)?);
