@@ -392,7 +392,7 @@ pub fn initiate_validator_exit<
     context: &Context,
 ) -> Result<(), Error> {
     if state.validators[index].exit_epoch != FAR_FUTURE_EPOCH {
-        return Ok(())
+        return Ok(());
     }
 
     let exit_queue_epoch = compute_exit_epoch_and_update_churn(

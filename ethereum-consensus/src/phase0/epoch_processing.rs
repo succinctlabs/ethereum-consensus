@@ -52,7 +52,7 @@ pub fn get_matching_source_attestations<
             requested: epoch,
             previous: previous_epoch,
             current: current_epoch,
-        })
+        });
     }
 
     if epoch == current_epoch {
@@ -89,7 +89,7 @@ pub fn get_matching_target_attestations<
     let source_attestations = get_matching_source_attestations(state, epoch, context)?;
     let mut result = vec![];
     if source_attestations.is_empty() {
-        return Ok(result)
+        return Ok(result);
     }
 
     let block_root = get_block_root(state, epoch, context)?;
@@ -196,7 +196,7 @@ pub fn process_justification_and_finalization<
     // Skip FFG updates in the first two epochs to avoid corner cases that might result in modifying
     // this stub.
     if get_current_epoch(state, context) <= GENESIS_EPOCH + 1 {
-        return Ok(())
+        return Ok(());
     }
     let previous_attestations =
         get_matching_target_attestations(state, get_previous_epoch(state, context), context)?;

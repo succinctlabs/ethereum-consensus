@@ -363,7 +363,7 @@ mod tests {
             // forward time to align with the slot just yielded
             time_provider.tick();
             if slot == target_slot {
-                break
+                break;
             }
             slots.push(slot);
             // jump world state ahead to just before next slot
@@ -392,7 +392,7 @@ mod tests {
                 assert_eq!(duration_since_unix_epoch().as_secs(), clock.timestamp_at_slot(slot));
             }
             if slot >= target_slot {
-                break
+                break;
             }
             slots.push(slot);
         }

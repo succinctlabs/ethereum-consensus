@@ -96,7 +96,7 @@ pub fn is_valid_indexed_attestation<
     if attesting_indices.is_empty() {
         return Err(invalid_operation_error(InvalidOperation::IndexedAttestation(
             InvalidIndexedAttestation::AttestingIndicesEmpty,
-        )))
+        )));
     }
 
     // List of indices is non-empty given check above. Begin iteration from the second element
@@ -107,7 +107,7 @@ pub fn is_valid_indexed_attestation<
         if index < prev {
             return Err(invalid_operation_error(InvalidOperation::IndexedAttestation(
                 InvalidIndexedAttestation::AttestingIndicesNotSorted,
-            )))
+            )));
         }
         if index == prev {
             duplicates.insert(index);
@@ -117,7 +117,7 @@ pub fn is_valid_indexed_attestation<
     if !duplicates.is_empty() {
         return Err(invalid_operation_error(InvalidOperation::IndexedAttestation(
             InvalidIndexedAttestation::DuplicateIndices(Vec::from_iter(duplicates)),
-        )))
+        )));
     }
 
     let mut public_keys = vec![];
@@ -253,7 +253,7 @@ pub fn compute_shuffled_index(
     context: &Context,
 ) -> Result<usize> {
     if index >= index_count {
-        return Err(Error::InvalidShufflingIndex { index, total: index_count })
+        return Err(Error::InvalidShufflingIndex { index, total: index_count });
     }
 
     let mut pivot_input = [0u8; 33];
@@ -291,7 +291,7 @@ pub fn compute_shuffled_indices(
 ) -> ShuffledIndices {
     let mut input = indices.to_vec();
     if input.is_empty() {
-        return input
+        return input;
     }
 
     let index_count = input.len();
@@ -422,7 +422,7 @@ pub fn compute_proposer_index<
     context: &Context,
 ) -> Result<ValidatorIndex> {
     if indices.is_empty() {
-        return Err(Error::CollectionCannotBeEmpty)
+        return Err(Error::CollectionCannotBeEmpty);
     }
     let mut round = 0;
     let total = indices.len();
@@ -437,7 +437,7 @@ pub fn compute_proposer_index<
             if let Some(candidate_index) =
                 sample_proposer_index(state, candidate_index, round, &mut hash_input, context)
             {
-                return Ok(candidate_index)
+                return Ok(candidate_index);
             }
             round += 1
         }
@@ -449,7 +449,7 @@ pub fn compute_proposer_index<
             if let Some(candidate_index) =
                 sample_proposer_index(state, candidate_index, round, &mut hash_input, context)
             {
-                return Ok(candidate_index)
+                return Ok(candidate_index);
             }
             round += 1
         }
@@ -612,7 +612,7 @@ pub fn get_block_root_at_slot<
             requested: slot,
             lower_bound: state.slot - 1,
             upper_bound: state.slot + SLOTS_PER_HISTORICAL_ROOT as Slot,
-        })
+        });
     }
     Ok(&state.block_roots[slot as usize % SLOTS_PER_HISTORICAL_ROOT])
 }
@@ -962,7 +962,7 @@ pub fn get_attesting_indices<
     if bits.len() != committee.len() {
         return Err(invalid_operation_error(InvalidOperation::Attestation(
             InvalidAttestation::Bitfield { expected_length: committee.len(), length: bits.len() },
-        )))
+        )));
     }
 
     let mut indices = HashSet::with_capacity(bits.capacity());
@@ -1056,7 +1056,7 @@ pub fn initiate_validator_exit<
     context: &Context,
 ) -> Result<()> {
     if state.validators[index].exit_epoch != FAR_FUTURE_EPOCH {
-        return Ok(())
+        return Ok(());
     }
 
     let mut exit_epochs: Vec<Epoch> = state

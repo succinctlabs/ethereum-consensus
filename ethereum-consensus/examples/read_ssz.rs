@@ -21,7 +21,7 @@ fn main() {
     }
     for txn in block.message.body.execution_payload.transactions.iter_mut() {
         let txn = TransactionSigned::decode_2718(&mut txn.as_ref()).unwrap();
-        if matches!(txn.transaction().tx_type(), TxType::Eip4844) {
+        if matches!(txn.tx_type(), TxType::Eip4844) {
             dbg!(txn);
         }
     }

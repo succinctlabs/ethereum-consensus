@@ -63,7 +63,7 @@ pub fn process_attestation<
                 target: data.target.epoch,
                 current: current_epoch,
             },
-        )))
+        )));
     }
 
     let attestation_epoch = compute_epoch_at_slot(data.slot, context);
@@ -74,7 +74,7 @@ pub fn process_attestation<
                 epoch: attestation_epoch,
                 target: data.target.epoch,
             },
-        )))
+        )));
     }
 
     let attestation_has_delay = data.slot + context.min_attestation_inclusion_delay <= state.slot;
@@ -88,14 +88,14 @@ pub fn process_attestation<
                 lower_bound: data.slot + context.slots_per_epoch,
                 upper_bound: data.slot + context.min_attestation_inclusion_delay,
             },
-        )))
+        )));
     }
 
     let committee_count = get_committee_count_per_slot(state, data.target.epoch, context);
     if data.index >= committee_count {
         return Err(invalid_operation_error(InvalidOperation::Attestation(
             InvalidAttestation::InvalidIndex { index: data.index, upper_bound: committee_count },
-        )))
+        )));
     }
 
     let committee = get_beacon_committee(state, data.slot, data.index, context)?;
@@ -105,7 +105,7 @@ pub fn process_attestation<
                 expected_length: committee.len(),
                 length: attestation.aggregation_bits.len(),
             },
-        )))
+        )));
     }
 
     // Participation flag indices
@@ -239,7 +239,7 @@ pub fn process_sync_aggregate<
                 signature: sync_aggregate.sync_committee_signature.clone(),
                 root: signing_root,
             },
-        )))
+        )));
     }
 
     // Compute participant and proposer rewards

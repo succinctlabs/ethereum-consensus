@@ -163,7 +163,7 @@ pub fn process_pending_balance_deposits<
         let index = deposit.index;
         let amount = deposit.amount;
         if processed_amount + deposit.amount > available_for_processing {
-            break
+            break;
         }
         increase_balance(state, index, amount);
         processed_amount += amount;
@@ -221,10 +221,10 @@ pub fn process_pending_consolidations<
         let source_validator = &state.validators[source_index];
         if source_validator.slashed {
             next_pending_consolidation += 1;
-            continue
+            continue;
         }
         if source_validator.withdrawable_epoch > get_current_epoch(state, context) {
-            break
+            break;
         }
 
         switch_to_compounding_validator(state, target_index, context)?;

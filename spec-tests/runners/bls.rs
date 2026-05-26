@@ -141,7 +141,7 @@ impl Execute for AggregateVerifyTestCase {
 
     fn verify_failure(&self) -> bool {
         if self.input.signature.is_none() {
-            return true
+            return true;
         }
         !self.run()
     }
@@ -196,13 +196,13 @@ impl Execute for FastAggregateVerifyTestCase {
 
     fn verify_failure(&self) -> bool {
         if self.input.signature.is_none() {
-            return true
+            return true;
         }
         if self.input.pubkeys.iter().any(|key| {
             let input: Result<PublicKey, _> = serde_yaml::from_str(key);
             input.is_err()
         }) {
-            return true
+            return true;
         }
 
         !self.run()
@@ -289,10 +289,10 @@ impl Execute for VerifyTestCase {
 
     fn verify_failure(&self) -> bool {
         if self.input.signature.is_none() {
-            return true
+            return true;
         }
         if self.input.pubkey.is_none() {
-            return true
+            return true;
         }
         !self.run()
     }
@@ -381,14 +381,14 @@ impl Execute for EthFastAggregateVerifyTestCase {
 
     fn verify_failure(&self) -> bool {
         if self.input.signature.is_none() {
-            return true
+            return true;
         }
 
         if self.input.public_keys.iter().any(|key| {
             let input: Result<PublicKey, _> = serde_yaml::from_str(key);
             input.is_err()
         }) {
-            return true
+            return true;
         }
 
         !self.run()

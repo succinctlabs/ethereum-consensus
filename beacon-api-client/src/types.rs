@@ -133,6 +133,7 @@ impl fmt::Display for BlockId {
 }
 
 #[derive(Serialize, Deserialize)]
+#[allow(dead_code)]
 enum ExecutionStatus {
     Default,
     Optimistic,
