@@ -128,6 +128,7 @@ impl FromStr for PeerId {
     }
 }
 
+#[cfg(feature = "enr")]
 pub type Enr = enr::Enr<enr::k256::ecdsa::SigningKey>;
 
 pub enum MessageDomain {
