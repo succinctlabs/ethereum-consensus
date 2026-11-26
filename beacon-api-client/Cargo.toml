@@ -24,7 +24,7 @@ serde_json = { workspace = true }
 itertools = { workspace = true }
 clap = { workspace = true, optional = true }
 thiserror = { workspace = true }
-ethereum-consensus = { path = "../ethereum-consensus" }
+ethereum-consensus = { path = "../ethereum-consensus", features = ["enr"] }
 
 [dev-dependencies]
 dotenv = "0.15.0"
